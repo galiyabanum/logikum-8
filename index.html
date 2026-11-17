@@ -1417,8 +1417,16 @@ $('#test-check').addEventListener('click', () => {
 $('#test-reset').addEventListener('click', () => { renderTest(); $('#test-fb').innerHTML=''; });
 
 /* ================= ВИДЕО ================= */
-(function(){ const v = $('#review-video'), src = v.querySelector('source');
-  const fail = () => { v.hidden = true; const f = $('#review-fallback'); f.className = 'fb warn'; f.innerHTML = 'Видео открывается на Яндекс Диске: <a href= + YA +  target="_blank" rel="noopener">«Язык логики» (5 мин)</a>.'; };
+(function(){ const v = $('#review-video'), src = v.querySelector('source'), YA = 'https://disk.360.yandex.ru/i/_JOZzp5-GzWM5Q';
+  let stage = 0;
+  const showLink = () => { v.hidden = true; const f = $('#review-fallback'); f.className = 'fb warn'; f.innerHTML = 'Видео открывается на Яндекс Диске: <a href="' + YA + '" target="_blank" rel="noopener">смотреть «Язык логики» (5 мин)</a>.'; };
+  // если плеер не смог открыть файл напрямую, пробуем загрузить его целиком и показать из памяти; не вышло — ссылка на Яндекс Диск
+  const fail = async () => {
+    if(stage++ > 0) return showLink();
+    try { const r = await fetch('video/yazyk-logiki.mp4'); if(!r.ok) throw new Error(r.status);
+      const b = await r.blob(); v.src = URL.createObjectURL(new Blob([b], {type:'video/mp4'})); v.load(); }
+    catch(e){ showLink(); }
+  };
   src.addEventListener('error', fail); v.addEventListener('error', fail);
 })();
 /* ================= СТАРТ ================= */
