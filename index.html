@@ -215,9 +215,10 @@ svg text{font-family:var(--f-mono)}
 .pill.ok{background:var(--ok-bg);color:var(--ok)}
 
 /* тест, ОГЭ */
-.q{display:grid;gap:6px;padding:14px 0 0;border:0;border-top:1px solid var(--line);margin:0}
+.q{display:grid;gap:6px;padding:16px 0 4px;border-top:1px solid var(--line);margin:0;min-width:0}
 .q:first-child{border-top:0;padding-top:0}
-.q legend{font-weight:600;padding:0;margin-bottom:6px}
+.q .qt{font-weight:600;margin:0 0 4px;width:100%}
+.q label span{flex:1;min-width:0}
 .q label{display:flex;gap:10px;align-items:flex-start;padding:7px 10px;border-radius:8px;border:1px solid transparent;cursor:pointer}
 .q label:hover{background:var(--chip)}
 .q label.right{border-color:var(--ok);background:var(--ok-bg)}
@@ -1398,9 +1399,9 @@ const TEST = [
   {q:'Какой логический элемент выполняет логическое сложение (ИЛИ)?', o:['инвертор','конъюнктор','дизъюнктор','триггер'], a:2, why:'Дизъюнктор выполняет ИЛИ, конъюнктор — И, инвертор — НЕ. Триггер — схема для хранения одного бита.'},
 ];
 function renderTest(){
-  $('#test-form').innerHTML = TEST.map((t,qi) => `<fieldset class="q"><legend>${qi+1}. ${esc(t.q)}</legend>
+  $('#test-form').innerHTML = TEST.map((t,qi) => `<div class="q" role="radiogroup" aria-labelledby="tqt-${qi}"><p class="qt" id="tqt-${qi}">${qi+1}. ${esc(t.q)}</p>
     ${t.o.map((o,oi) => `<label id="tl-${qi}-${oi}"><input type="radio" name="tq${qi}" id="tq-${qi}-${oi}" value="${oi}"><span>${esc(o)}</span></label>`).join('')}
-    <div class="why" id="tw-${qi}" hidden></div></fieldset>`).join('');
+    <div class="why" id="tw-${qi}" hidden></div></div>`).join('');
 }
 $('#test-check').addEventListener('click', () => {
   let score = 0, missing = 0;
